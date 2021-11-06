@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <dimen name="weight_image">100dp</dimen>
+    <dimen name="height_image">150dp</dimen>
+    <dimen name="size_image_star">20dp</dimen>
+    <dimen name="margin_end_star">8dp</dimen>
+</resources>

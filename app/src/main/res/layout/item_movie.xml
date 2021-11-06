@@ -1,6 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.circularreveal.CircularRevealFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    tools:src="@drawable/duna_image"
+                    android:layout_width="@dimen/weight_image"
+                    android:layout_height="@dimen/height_image" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Duna"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                       tools:text="2020"/>
+                    <ImageView
+                        android:layout_width="@dimen/size_image_star"
+                        android:layout_height="@dimen/size_image_star"
+                        android:layout_marginStart="@dimen/size_image_star"
+                        android:layout_marginEnd="@dimen/margin_end_star"
+                        tools:src = "@drawable/ic_baseline_star_rate_24"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="6.9"
+                       />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+</com.google.android.material.circularreveal.CircularRevealFrameLayout>
