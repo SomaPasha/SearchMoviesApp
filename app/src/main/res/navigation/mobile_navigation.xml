@@ -9,7 +9,7 @@
         android:id="@+id/navigation_list_movie"
         android:name="space.kuz.searchmoviesapp.iu.fragment.ListMovieFragment"
         android:label="fragment_list_movie"
-        tools:layout="@layout/fragment_one_movie" />
+        tools:layout="@layout/fragment_list_movie" />
 
     <fragment
         android:id="@+id/navigation_favorite_movie"
