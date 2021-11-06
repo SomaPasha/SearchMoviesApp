@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Фильмы</string>
+    <string name="list_movie">Список фильмов</string>
+    <string name="favorite_movie">Выбранный фильм</string>
+    <string name="ratings_movie">Рейтинг фильмов</string>
 </resources>

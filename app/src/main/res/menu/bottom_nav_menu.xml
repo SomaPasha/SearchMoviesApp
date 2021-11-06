@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/navigation_list_movie"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="@string/list_movie"/>
+
+    <item android:id="@+id/navigation_favorite_movie"
+        android:icon="@drawable/ic_baseline_favorite_24"
+        android:title="@string/favorite_movie"/>
+
+    <item android:id="@+id/navigation_ratings_movie"
+        android:icon="@drawable/ic_baseline_assessment_24"
+        android:title="@string/ratings_movie"/>
+</menu>

@@ -1,4 +1,6 @@
 package space.kuz.searchmoviesapp.iu.fragment
 
-class RatingsMovieFragment {
+import androidx.fragment.app.Fragment
+
+class RatingsMovieFragment :Fragment() {
 }

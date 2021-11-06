@@ -1,4 +1,6 @@
 package space.kuz.searchmoviesapp.iu.fragment
 
-class OneMovieFragment {
+import androidx.fragment.app.Fragment
+
+class OneMovieFragment:Fragment() {
 }

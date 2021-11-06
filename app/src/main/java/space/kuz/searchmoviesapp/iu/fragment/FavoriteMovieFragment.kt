@@ -1,4 +1,6 @@
 package space.kuz.searchmoviesapp.iu.fragment
 
-class FavoriteMovieFragment {
+import androidx.fragment.app.Fragment
+
+class FavoriteMovieFragment:Fragment() {
 }

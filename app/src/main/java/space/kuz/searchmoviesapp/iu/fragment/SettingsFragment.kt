@@ -1,4 +1,6 @@
 package space.kuz.searchmoviesapp.iu.fragment
 
-class SettingsFragment {
+import androidx.fragment.app.Fragment
+
+class SettingsFragment:Fragment() {
 }

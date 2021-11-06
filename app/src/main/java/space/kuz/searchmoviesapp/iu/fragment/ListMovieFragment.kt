@@ -1,4 +1,6 @@
 package space.kuz.searchmoviesapp.iu.fragment
 
-class ListMovieFragment {
+import androidx.fragment.app.Fragment
+
+class ListMovieFragment : Fragment() {
 }
