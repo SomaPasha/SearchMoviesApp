@@ -26,7 +26,7 @@ class OneMovieFragment:Fragment() {
     }
 
     private fun initToolBar(view: View) {
-        toolbar = view.findViewById(R.id.list_movie_toolbar)
+        toolbar = view.findViewById(R.id.one_movie_toolbar)
         (requireActivity() as MainActivity).setSupportActionBar(toolbar)
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
@@ -36,5 +36,10 @@ class OneMovieFragment:Fragment() {
         inflater.inflate(R.menu.menu_one_movie, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
+
+    override fun onStop() {
+        super.onStop()
+    }
+
 
 }
