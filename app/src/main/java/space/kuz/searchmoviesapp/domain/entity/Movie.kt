@@ -7,10 +7,11 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Movie(
-    val id: Long,
     val image:String,
     val description:String,
     val name: String,
     val year: String,
     val rating: Float
-    ):Parcelable
+    ):Parcelable {
+    private  var id: Long? = null
+}

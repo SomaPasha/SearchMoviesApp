@@ -13,16 +13,33 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import space.kuz.searchmoviesapp.R
+import space.kuz.searchmoviesapp.domain.entity.Movie
+import space.kuz.searchmoviesapp.domain.repo.MovieRepository
+import space.kuz.searchmoviesapp.implimentation.MovieRepositoryImplementation
 import space.kuz.searchmoviesapp.iu.fragment.OneMovieFragment
 
 class MainActivity : AppCompatActivity() {
+
+    private var moviesRepo:MovieRepository = MovieRepositoryImplementation()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         navView.setupWithNavController(navController)
-       //supportActionBar.hide()
+        fillRepo()
+
+
+        //supportActionBar.hide()
+    }
+
+    private fun fillRepo() {
+       moviesRepo.createMovie(Movie("dfd","Я Фильм про1","Duna1", "2020",  6.9F))
+        moviesRepo.createMovie(Movie("dfd","Я Фильм про2","Duna2", "2020",  6.8F))
+        moviesRepo.createMovie(Movie("dfd","Я Фильм про3","Duna3", "2020",  6.7F))
+        moviesRepo.createMovie(Movie("dfd","Я Фильм про4","Duna4", "2020",  6.5F))
+        moviesRepo.createMovie(Movie("dfd","Я Фильм про5","Duna5", "2020",  6.4F))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
