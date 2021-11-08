@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/purple_200">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -16,11 +18,17 @@
             android:layout_height="wrap_content"
             app:title="@string/app_name" />
     </com.google.android.material.appbar.AppBarLayout>
+    <ImageView
+        android:id="@+id/image_ex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
 
+    </ImageView>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_movie"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
 
-</FrameLayout>
+</LinearLayout>

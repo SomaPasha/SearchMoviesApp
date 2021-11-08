@@ -1,12 +1,15 @@
 package space.kuz.searchmoviesapp.iu.fragment
 
-import android.app.ActionBar
 import android.os.Bundle
 import android.view.*
-import android.widget.Toolbar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import space.kuz.searchmoviesapp.R
+import space.kuz.searchmoviesapp.domain.entity.Movie
+import space.kuz.searchmoviesapp.iu.MoviesAdapter
 import space.kuz.searchmoviesapp.iu.main.MainActivity
 
 class ListMovieFragment : Fragment() {
@@ -24,7 +27,11 @@ class ListMovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolBar(view)
+       // (requireActivity() as MainActivity).adapter.setDataBase(  (requireActivity() as MainActivity).moviesRepo.getMovie())
+       // (requireActivity() as MainActivity).initRecyclerView()
+
     }
+
 
     private fun initToolBar(view: View) {
         toolbar = view.findViewById(R.id.list_movie_toolbar)

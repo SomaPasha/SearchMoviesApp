@@ -4,7 +4,7 @@ import space.kuz.searchmoviesapp.domain.entity.Movie
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
 import kotlin.contracts.contract
 
-class MovieRepositoryImplementation : MovieRepository {
+class MovieRepositoryImplementation() : MovieRepository {
      private var  moviesArr:ArrayList<Movie> = ArrayList()
      private  var counter:Long=0
 
