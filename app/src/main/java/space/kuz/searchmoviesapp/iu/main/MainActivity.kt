@@ -19,46 +19,37 @@ import space.kuz.searchmoviesapp.domain.entity.Movie
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
 import space.kuz.searchmoviesapp.implimentation.MovieRepositoryImplementation
 import space.kuz.searchmoviesapp.iu.MoviesAdapter
+import space.kuz.searchmoviesapp.iu.fragment.ListMovieFragment
 import space.kuz.searchmoviesapp.iu.fragment.OneMovieFragment
 
-class MainActivity : AppCompatActivity() {
-    //private val moviesRepo: MovieRepository = MovieRepositoryImplementation()
+class MainActivity : AppCompatActivity(), ListMovieFragment.Controller{
  var moviesRepo:MovieRepository = MovieRepositoryImplementation()
-    private lateinit var recyclerView:RecyclerView
+     var recyclerView:RecyclerView?=null
      var adapter: MoviesAdapter = MoviesAdapter()
-  //  private lateinit var imageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-       var imageView :ImageView= findViewById<ImageView>(R.id.image_ex)
-     //   imageView.setImageResource(R.drawable.duna_image)
-       /* Picasso.with(this).setIndicatorsEnabled(true)
-        Picasso.with(this).
-        load(1)
-            //"http://2.bp.blogspot.com/-G_BQbLpOKtM/VL0FG0zSmkI/AAAAAAAAw-g/g3JZMK0yGCA/w620/1%2B%D0%BA%D1%80%D0%B0%D1%81%D0%B8%D0%B2%D1%8B%D0")
-            .placeholder(R.drawable.duna_image)
-            .into(imageView) */
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         navView.setupWithNavController(navController)
         fillRepo()
         initRecyclerView()
-
-        //supportActionBar.hide()
     }
      fun initRecyclerView() {
-        recyclerView = findViewById<RecyclerView>(R.id.recycler_view_movie) as RecyclerView
+        recyclerView = findViewById<RecyclerView>(R.id.recycler_view_movie)
        var linearLayout: LinearLayoutManager = LinearLayoutManager(this,
         LinearLayoutManager.HORIZONTAL,false)
-       recyclerView.layoutManager = linearLayout
-        recyclerView.adapter = adapter
+       recyclerView?.layoutManager = linearLayout
+         recyclerView?.setHasFixedSize(true)
+        recyclerView?.adapter = adapter
        adapter.setDataBase(moviesRepo.getMovie())
-       adapter.setOnItemClickListener ( this::onItemClick )
+         adapter.setOnItemClickListener(object :MoviesAdapter.onItemClickListener{
+             override fun onItemClick(item: Movie) {
+                 Toast.makeText(this@MainActivity, item.id.toString(), Toast.LENGTH_SHORT).show();
+             }
+         })
 
-    }
-    fun onItemClick(item: Movie) {
-        Toast.makeText(this, "Ура", Toast.LENGTH_SHORT).show();
     }
      fun fillRepo() {
       moviesRepo.createMovie(Movie(R.drawable.duna_image, "Я Фильм про1","Duna", "2020",  6.9F))
@@ -86,6 +77,11 @@ class MainActivity : AppCompatActivity() {
         transaction.addToBackStack(null)
         transaction.replace(R.id.one_movie_fragment, fragment)
         transaction.commit()
+    }
+
+    override fun openEditMovie() {
+       initRecyclerView()
+      //  Toast.makeText(this,"Н++",Toast.LENGTH_LONG).show()
     }
 
 }

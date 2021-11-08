@@ -12,7 +12,7 @@ import space.kuz.searchmoviesapp.R
 import space.kuz.searchmoviesapp.domain.entity.Movie
 import space.kuz.searchmoviesapp.iu.main.MainActivity
 
-class MoviesViewHolder(itemView: ViewGroup, lisener: onItemClickListener?)
+class MoviesViewHolder(itemView: ViewGroup, listener: MoviesAdapter.onItemClickListener?)
  : RecyclerView.ViewHolder(itemView) {
 
 
@@ -24,11 +24,7 @@ class MoviesViewHolder(itemView: ViewGroup, lisener: onItemClickListener?)
         init {
            // image = itemView.findViewById(R.id.image)
          LayoutInflater.from(itemView.context).inflate(R.layout.item_movie, itemView,false)
-            itemView.setOnClickListener{
-                if (lisener != null) {
-                    lisener.onItemClick(movie)
-                }
-            }
+            itemView.setOnClickListener{ listener?.onItemClick(movie) }
         }
 
 

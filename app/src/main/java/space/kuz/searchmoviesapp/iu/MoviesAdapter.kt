@@ -5,12 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import space.kuz.searchmoviesapp.R
 import space.kuz.searchmoviesapp.domain.entity.Movie
-import kotlin.reflect.KFunction1
 
 class MoviesAdapter : RecyclerView.Adapter<MoviesViewHolder>() {
+    interface onItemClickListener {
+        fun onItemClick(item:Movie);
+    }
 
     var data:List<Movie> = ArrayList()
-    var lisener: onItemClickListener? = null;
+    var listener: onItemClickListener? = null;
 
     fun setDataBase(data:List<Movie>){
         this.data = data
@@ -20,7 +22,7 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
         val itemView =LayoutInflater.from(parent.context)
             .inflate(R.layout.item_movie,parent,false)
-        return MoviesViewHolder(itemView as ViewGroup,lisener)
+        return MoviesViewHolder(itemView as ViewGroup,listener)
 
     }
 
@@ -37,10 +39,8 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesViewHolder>() {
        return data.size
     }
 
-    fun setOnItemClickListener(listener: KFunction1<Movie, Unit>){this.lisener=lisener}
+    fun setOnItemClickListener( listener: onItemClickListener){this.listener= listener}
+
 }
 
 
-interface onItemClickListener {
-   fun onItemClick(item:Movie);
-}

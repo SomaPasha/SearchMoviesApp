@@ -1,5 +1,6 @@
 package space.kuz.searchmoviesapp.iu.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -14,6 +15,7 @@ import space.kuz.searchmoviesapp.iu.main.MainActivity
 
 class ListMovieFragment : Fragment() {
     private lateinit var toolbar: MaterialToolbar
+    private  var controller: Controller? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,15 +25,27 @@ class ListMovieFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_list_movie, container,false)
 
     }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        controller = if (context is Controller) {
+            context
+        } else {
+            throw IllegalStateException("Activity must implement ListNoteFragment.Controller")
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolBar(view)
+        controller!!.openEditMovie()
        // (requireActivity() as MainActivity).adapter.setDataBase(  (requireActivity() as MainActivity).moviesRepo.getMovie())
        // (requireActivity() as MainActivity).initRecyclerView()
 
     }
 
+    interface Controller {
+        fun openEditMovie()
+    }
 
     private fun initToolBar(view: View) {
         toolbar = view.findViewById(R.id.list_movie_toolbar)
