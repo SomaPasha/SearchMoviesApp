@@ -3,14 +3,9 @@ package space.kuz.searchmoviesapp.iu.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import space.kuz.searchmoviesapp.R
-import space.kuz.searchmoviesapp.domain.entity.Movie
-import space.kuz.searchmoviesapp.iu.MoviesAdapter
 import space.kuz.searchmoviesapp.iu.main.MainActivity
 
 class ListMovieFragment : Fragment() {
@@ -30,21 +25,21 @@ class ListMovieFragment : Fragment() {
         controller = if (context is Controller) {
             context
         } else {
-            throw IllegalStateException("Activity must implement ListNoteFragment.Controller")
+            throw IllegalStateException("Activity must implement ListMovieFragment.Controller")
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolBar(view)
-        controller!!.openEditMovie()
+        controller!!.openListMovie()
        // (requireActivity() as MainActivity).adapter.setDataBase(  (requireActivity() as MainActivity).moviesRepo.getMovie())
        // (requireActivity() as MainActivity).initRecyclerView()
 
     }
 
     interface Controller {
-        fun openEditMovie()
+        fun openListMovie()
     }
 
     private fun initToolBar(view: View) {
@@ -58,6 +53,11 @@ class ListMovieFragment : Fragment() {
         menu.clear()
         inflater.inflate(R.menu.menu_list_movie, menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onDestroy() {
+        controller = null
+        super.onDestroy()
     }
 
 }
