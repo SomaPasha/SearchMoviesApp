@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.google.android.material.appbar.MaterialToolbar
 import space.kuz.searchmoviesapp.R
 import space.kuz.searchmoviesapp.databinding.FragmentOneMovieBinding
@@ -51,7 +52,17 @@ class OneMovieFragment:Fragment() {
         binding.oneMovieNameTextView.text = movie.name
         binding.oneMovieDescriptionTextView.text = movie.description
         binding.oneMovieRatingsTextView.text = movie.rating.toString()
-        binding.oneMovieImage.setImageResource(movie.image)
+     //   C.setImageResource(movie.image)
+        if(movie.image.isNotBlank()){
+            Glide.with( binding.oneMovieImage.context)
+                .load(movie.image)
+               // .circleCrop()
+                .placeholder(R.drawable.ic_baseline_close_24)
+                .error(R.drawable.ic_baseline_close_24)
+                .into(binding.oneMovieImage)
+        } else{
+            binding.oneMovieImage.setImageResource(R.drawable.ic_baseline_close_24)
+        }
     }
     interface Controller {
         fun openOneMovie()
