@@ -11,7 +11,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SearchMoviesApp">
+        android:theme="@style/Theme.SearchMoviesApp"
+        android:name=".iu.main.App">
         <activity
             android:name=".iu.main.MainActivity"
             android:exported="true">
