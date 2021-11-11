@@ -33,8 +33,6 @@ class ListMovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initToolBar(view)
         controller!!.openListMovie()
-       // (requireActivity() as MainActivity).adapter.setDataBase(  (requireActivity() as MainActivity).moviesRepo.getMovie())
-       // (requireActivity() as MainActivity).initRecyclerView()
 
     }
 
@@ -45,7 +43,6 @@ class ListMovieFragment : Fragment() {
     private fun initToolBar(view: View) {
         toolbar = view.findViewById(R.id.list_movie_toolbar)
         (requireActivity() as MainActivity).setSupportActionBar(toolbar)
-       // (requireActivity() as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
     }
 

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import space.kuz.searchmoviesapp.R
+import space.kuz.searchmoviesapp.databinding.ActivityMainBinding
 import space.kuz.searchmoviesapp.domain.entity.Movie
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
 import space.kuz.searchmoviesapp.implimentation.MovieRepositoryImplementation
@@ -23,6 +24,7 @@ import java.util.*
 class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
     OneMovieFragment.Controller {
 
+    private lateinit var  binding: ActivityMainBinding
     var recyclerView: RecyclerView? = null
     var recyclerViewTwo: RecyclerView? = null
     var adapter: MoviesAdapter = MoviesAdapter()
@@ -31,12 +33,12 @@ class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val navController = findNavController(R.id.nav_host_fragment)
-        navView.setupWithNavController(navController)
+        binding.navView.setupWithNavController(navController)
         initRepo()
-        navView.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item: MenuItem ->
+        binding.navView.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
                 //   R.id.navigation_list_movie-> supportFragmentManager.popBackStack()
                 //Toast.makeText(this,"Список", Toast.LENGTH_SHORT).show()
@@ -59,12 +61,9 @@ class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
 
     fun initRecyclerView() {
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view_movie)
-        initRecyclerViewGroup(recyclerView, adapter, (applicationContext as App).moviesRepo)
+        initRecyclerViewGroup( recyclerView, adapter, (applicationContext as App).moviesRepo)
         recyclerViewTwo = findViewById<RecyclerView>(R.id.recycler_view_movie_2)
-        initRecyclerViewGroup(
-            recyclerViewTwo,
-            adapterTwo,
-            (applicationContext as App).moviesRepoTwo
+        initRecyclerViewGroup(recyclerViewTwo, adapterTwo,(applicationContext as App).moviesRepoTwo
         )
     }
 
@@ -78,10 +77,8 @@ class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
             this,
             LinearLayoutManager.HORIZONTAL, false
         )
-        // linearLayout.isAutoMeasureEnabled = true
         recyclerView?.layoutManager = linearLayout
         recyclerView?.setHasFixedSize(true)
-        //recyclerView?.isNestedScrollingEnabled =false
         recyclerView?.adapter = adapter
         adapter.setDataBase(moviesRepo.getMovie())
         adapter.setOnItemClickListener(object : MoviesAdapter.onItemClickListener {
