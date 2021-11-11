@@ -20,17 +20,12 @@ class MoviesViewHolder(
     private var nameTextView: TextView? =itemView.findViewById<TextView>(R.id.name_movie_text_view)
     private var yearTextView: TextView? =itemView.findViewById<TextView>(R.id.year_movie_text_view)
     private var ratingsTextView: TextView? =itemView.findViewById<TextView>(R.id.ratings_movie_text_view)
-    private var image2: ImageView? =itemView.findViewById<ImageView>(R.id.image_movie_image_view_2)
-    private var nameTextView2: TextView? =itemView.findViewById<TextView>(R.id.name_movie_text_view_2)
-    private var yearTextView2: TextView? =itemView.findViewById<TextView>(R.id.year_movie_text_view_2)
-    private var ratingsTextView2: TextView? =itemView.findViewById<TextView>(R.id.ratings_movie_text_view_2)
     private lateinit var movie:Movie
         init {
             itemView.setOnClickListener { listener?.onItemClick(movie) }
         }
 
-
-    fun bindType1(item: Movie) {
+    fun bind(item: Movie) {
         this.movie = item
         image!!.setImageResource(item.image)
         nameTextView!!.text = item.name
@@ -38,12 +33,5 @@ class MoviesViewHolder(
         ratingsTextView!!.text = item.rating.toString()
 
     }
-    fun bindType2(item: Movie) {
-        this.movie = item
-        image2!!.setImageResource(item.image)
-        nameTextView2!!.text = item.name
-        yearTextView2!!.text = item.year
-        ratingsTextView2!!.text = item.rating.toString()
 
-    }
 }
