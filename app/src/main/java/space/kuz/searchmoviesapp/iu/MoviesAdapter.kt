@@ -22,7 +22,7 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
              var itemView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_movie, parent, false) as ViewGroup
+                 .inflate(R.layout.item_movie, parent, false) as ViewGroup
         return MoviesViewHolder(itemView!!, listener)
 
     }
