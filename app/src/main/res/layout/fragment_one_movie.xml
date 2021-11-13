@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/one_movie_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/one_movie_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/app_name" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <TextView
+        android:id="@+id/one_movie_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:layout_gravity="center_horizontal"
+        tools:text="ИмЯ"
+        ></TextView>
+
+        <ImageView
+            android:id="@+id/one_movie_image"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            tools:src="@drawable/duna_image"
+            ></ImageView>
+        <TextView
+            android:id="@+id/one_movie_description_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            tools:text="jhsdglkjjfksjgfsfsfsffsfssffsfssffsfsfsfsfsfsffsfsfsfsfsffsfsfsfsjjbdfmbmfdbmfdbmn"
+            ></TextView>
+    <TextView
+        android:id="@+id/one_movie_ratings_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:layout_gravity="center_horizontal"
+        tools:text="7.0"
+        ></TextView>
+
+
+</LinearLayout>
