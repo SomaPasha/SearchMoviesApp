@@ -3,6 +3,7 @@ package space.kuz.searchmoviesapp.iu.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
+import com.google.android.material.snackbar.Snackbar
 import space.kuz.searchmoviesapp.R
 import space.kuz.searchmoviesapp.databinding.ActivityMainBinding
 import space.kuz.searchmoviesapp.domain.entity.Movie
@@ -92,12 +95,16 @@ class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
     fun openMovieScreen(movie: Movie?) {
         loadFragment(OneMovieFragment(), movie!!)
     }
-
+    fun Snackbar.setTextString(int: Int):String{
+        return  resources.getString(int)
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
+        var  snack : Snackbar = Snackbar.make(binding.snackbarView!!,"",LENGTH_SHORT)
         when (item.itemId) {
-            R.id.setting -> Toast.makeText(this, "Настройки", Toast.LENGTH_LONG).show()
+            R.id.setting -> Snackbar.make(binding.snackbarView!!,snack.setTextString(R.string.settings),LENGTH_SHORT).show()
+
+                //Toast.makeText(this, "Настройки", Toast.LENGTH_LONG).show()
             R.id.exit -> Toast.makeText(this, "Выход", Toast.LENGTH_LONG).show()
             R.id.search_movie -> Toast.makeText(this, "поиск", Toast.LENGTH_LONG).show()
             android.R.id.home -> supportFragmentManager.popBackStack()
