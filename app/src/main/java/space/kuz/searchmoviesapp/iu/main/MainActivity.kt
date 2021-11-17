@@ -70,9 +70,7 @@ class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
                 val resJson = gson.fromJson(result , Array<MovieRepo>::class.java)
 
                 val sb = StringBuilder()
-                   resJson.forEach {
-                   sb.appendLine(it.toString())
-              }
+
                 runOnUiThread {
 
                     binding.textFind?.text =  sb.toString()
