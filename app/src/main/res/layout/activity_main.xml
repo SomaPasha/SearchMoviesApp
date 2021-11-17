@@ -24,6 +24,12 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
 
         />
+    <TextView
+        android:id="@+id/text_find"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dgdsagsdg"
+        ></TextView>
     <View
         android:id="@+id/snackbar_view"
         android:layout_width="match_parent"

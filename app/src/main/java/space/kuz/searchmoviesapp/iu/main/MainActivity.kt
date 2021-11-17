@@ -14,30 +14,81 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import space.kuz.searchmoviesapp.R
+import space.kuz.searchmoviesapp.data.DataMovies
 import space.kuz.searchmoviesapp.databinding.ActivityMainBinding
 import space.kuz.searchmoviesapp.domain.entity.Movie
+import space.kuz.searchmoviesapp.domain.entity.MovieRepo
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
 import space.kuz.searchmoviesapp.implimentation.MovieRepositoryImplementation
 import space.kuz.searchmoviesapp.iu.MoviesAdapter
 import space.kuz.searchmoviesapp.iu.fragment.ListMovieFragment
 import space.kuz.searchmoviesapp.iu.fragment.OneMovieFragment
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.lang.Exception
+import java.lang.StringBuilder
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.*
 
 class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
     OneMovieFragment.Controller {
-
+    private val themoviedbURl: String =  "https://api.themoviedb.org/3/discover/movie?api_key=b394bdee20e1f534a09fb18b1a16568a&with_genres=27"
+    private  val gson by lazy { Gson() }
     private lateinit var  binding: ActivityMainBinding
     var recyclerView: RecyclerView? = null
     var recyclerViewTwo: RecyclerView? = null
     var adapter: MoviesAdapter = MoviesAdapter()
     var adapterTwo: MoviesAdapter = MoviesAdapter()
-
+    var dataMovie:DataMovies = DataMovies()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
+        Thread {
+
+            var urlConnection: HttpURLConnection? = null
+            try {
+                val url = URL(themoviedbURl)
+                urlConnection = url.openConnection() as HttpURLConnection
+                urlConnection.requestMethod = "GET"
+                urlConnection.connectTimeout = 5_000
+
+                // val out: OutputStream = BufferedOutputStream(urlConnection.outputStream)
+                val bufferedReader = BufferedReader(InputStreamReader(urlConnection.inputStream))
+
+               var result = bufferedReader.readLines().toString()
+
+                  //  val resJson =  gson.fromJson<MovieRepo>(result,  MovieRepo ::class.java)
+                val resJson = gson.fromJson(result , Array<MovieRepo>::class.java)
+
+                val sb = StringBuilder()
+                   resJson.forEach {
+                   sb.appendLine(it.toString())
+              }
+                runOnUiThread {
+
+                    binding.textFind?.text =  sb.toString()
+                }
+            } finally {
+                urlConnection?.disconnect()
+            }
+
+
+        }.start()
+
+
+
+
+
+
         val navController = findNavController(R.id.nav_host_fragment)
         binding.navView.setupWithNavController(navController)
         initRepo()
@@ -115,7 +166,7 @@ class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
     }
 
     private fun loadFragment(fragment: Fragment) {
-        val transaction = supportFragmentManager.beginTransaction()
+        val transaction = supportFragmentManager.beginTransaction(  )
         transaction.addToBackStack(null)
         transaction.replace(R.id.one_movie_fragment, fragment)
         transaction.commit()
