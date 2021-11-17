@@ -21,6 +21,7 @@ import space.kuz.searchmoviesapp.data.DataMovies
 import space.kuz.searchmoviesapp.databinding.ActivityMainBinding
 import space.kuz.searchmoviesapp.domain.entity.Movie
 import space.kuz.searchmoviesapp.domain.entity.MovieRepo
+import space.kuz.searchmoviesapp.domain.entity.Root
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
 import space.kuz.searchmoviesapp.implimentation.MovieRepositoryImplementation
 import space.kuz.searchmoviesapp.iu.MoviesAdapter
@@ -67,8 +68,7 @@ class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
                var result = bufferedReader.readLines().toString()
 
                   //  val resJson =  gson.fromJson<MovieRepo>(result,  MovieRepo ::class.java)
-                val resJson = gson.fromJson(result , Array<MovieRepo>::class.java)
-
+                val resJson = gson.fromJson(result , Array<Root>::class.java)
                 val sb = StringBuilder()
 
                 runOnUiThread {
