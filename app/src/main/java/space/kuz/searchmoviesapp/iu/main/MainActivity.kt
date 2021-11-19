@@ -3,37 +3,38 @@ package space.kuz.searchmoviesapp.iu.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import org.json.JSONArray
+import org.json.JSONObject
 import space.kuz.searchmoviesapp.R
 import space.kuz.searchmoviesapp.data.DataMovies
 import space.kuz.searchmoviesapp.databinding.ActivityMainBinding
 import space.kuz.searchmoviesapp.domain.entity.Movie
-import space.kuz.searchmoviesapp.domain.entity.MovieRepo
+import space.kuz.searchmoviesapp.domain.entity.Results
 import space.kuz.searchmoviesapp.domain.entity.Root
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
-import space.kuz.searchmoviesapp.implimentation.MovieRepositoryImplementation
 import space.kuz.searchmoviesapp.iu.MoviesAdapter
 import space.kuz.searchmoviesapp.iu.fragment.ListMovieFragment
 import space.kuz.searchmoviesapp.iu.fragment.OneMovieFragment
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.Exception
 import java.lang.StringBuilder
+import java.lang.reflect.Type
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
     OneMovieFragment.Controller {
@@ -68,9 +69,18 @@ class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
                var result = bufferedReader.readLines().toString()
 
                   //  val resJson =  gson.fromJson<MovieRepo>(result,  MovieRepo ::class.java)
-                val resJson = gson.fromJson(result , Array<Root>::class.java)
+           //     val gson = GsonBuilder().create()
+               var model = gson.fromJson(result,Array<Results> ::class.java )
+            //    val resJson = gson.fromJson(result , Root.)
+    //    var jsonObject = JSONObject(result)
+      //          var jsonArray = jsonObject.getJSONArray("results")
+               // val groupListType: Type? = TypeToken<ArrayList<Results>>().type
                 val sb = StringBuilder()
 
+                model.forEach {
+
+                    sb.appendLine(it.toString())
+                }
                 runOnUiThread {
 
                     binding.textFind?.text =  sb.toString()
