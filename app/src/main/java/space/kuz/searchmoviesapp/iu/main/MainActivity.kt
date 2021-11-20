@@ -75,12 +75,18 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
                 it.forEach {
                     (applicationContext as App).moviesRepo.createMovie(it)
                 }
+
                 runOnUiThread {
                     initRecyclerView()
                     Thread.sleep(3000)
+                    if((applicationContext as App).moviesRepo.getMovie().isEmpty()){
+                        Snackbar.make(binding.snackbarView!!,"Check correct connect internet",LENGTH_SHORT).show()
+                    }
                     showProgress(false)
                 }
-            }
+
+        }
+
 
       //  (applicationContext as App).fillRepoCrazzy()
       //  (applicationContext as App).fillRepoFant()
