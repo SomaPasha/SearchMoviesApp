@@ -3,6 +3,7 @@ package space.kuz.searchmoviesapp.domain.entity
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import java.util.concurrent.atomic.AtomicLong
 
 @Parcelize
 data class MovieClass (

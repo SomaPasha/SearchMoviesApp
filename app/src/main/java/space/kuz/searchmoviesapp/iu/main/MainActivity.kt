@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -14,31 +15,25 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import space.kuz.searchmoviesapp.R
-import space.kuz.searchmoviesapp.data.DataMovies
 import space.kuz.searchmoviesapp.databinding.ActivityMainBinding
 import space.kuz.searchmoviesapp.domain.entity.MovieClass
-import space.kuz.searchmoviesapp.domain.entity.Root
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
+import space.kuz.searchmoviesapp.domain.repo.TheMovieRepo
 import space.kuz.searchmoviesapp.iu.MoviesAdapter
 import space.kuz.searchmoviesapp.iu.fragment.ListMovieFragment
 import space.kuz.searchmoviesapp.iu.fragment.OneMovieFragment
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.lang.StringBuilder
-import java.net.HttpURLConnection
-import java.net.URL
+import java.io.IOException
+import java.lang.Exception
 import java.util.*
 
-class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
-    OneMovieFragment.Controller {
-    private val themoviedbURl: String =  "https://api.themoviedb.org/3/discover/movie?api_key=b394bdee20e1f534a09fb18b1a16568a&with_genres=27"
-    private  val gson by lazy { Gson() }
-    private lateinit var  binding: ActivityMainBinding
+class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
+    OneMovieFragment.Controller  {
+    private  val  theMovieRepo: TheMovieRepo  by lazy { app.theMovieRepo }
+    lateinit var  binding: ActivityMainBinding
     var recyclerView: RecyclerView? = null
     var recyclerViewTwo: RecyclerView? = null
     var adapter: MoviesAdapter = MoviesAdapter()
     var adapterTwo: MoviesAdapter = MoviesAdapter()
-    var dataMovie:DataMovies = DataMovies()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,56 +41,13 @@ class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
         setContentView(binding.root)
 
 
-
-        Thread {
-
-            var urlConnection: HttpURLConnection? = null
-            try {
-                val url = URL(themoviedbURl)
-                urlConnection = url.openConnection() as HttpURLConnection
-                urlConnection.requestMethod = "GET"
-                urlConnection.connectTimeout = 5_000
-
-                val bufferedReader = BufferedReader(InputStreamReader(urlConnection.inputStream))
-
-               var result = bufferedReader.readLines().toString()
-
-               var model = gson.fromJson(result,Array<Root> ::class.java )
-
-                val sb = StringBuilder()
-
-              model.forEach {
-                    it.results.forEach {
-                      // sb.appendLine(  (applicationContext as App).moviesRepo)
-                        (applicationContext as App).moviesRepo.createMovie(
-                            MovieClass("https://www.themoviedb.org/t/p/w1000_and_h450_multi_faces"+
-                                    it.image,
-                                it.name,it.description, it.year.substring(0,4),  it.rating)
-                        )
-                    }
-
-                }
-                runOnUiThread {
-
-               //     binding.textFind?.text =  sb.toString()
-                    initRecyclerView()
-                }
-            } finally {
-                urlConnection?.disconnect()
-            }
-
-
-        }.start()
-
-
-
-
-
+        showProgress(true)
 
         val navController = findNavController(R.id.nav_host_fragment)
         binding.navView.setupWithNavController(navController)
 
         initRepo()
+
         binding.navView.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
                 //   R.id.navigation_list_movie-> supportFragmentManager.popBackStack()
@@ -111,10 +63,27 @@ class MainActivity : AppCompatActivity(), ListMovieFragment.Controller,
         })
         initRecyclerView()
     }
+    private  fun showProgress(show:Boolean) {
+        binding.progressBar?.isVisible = show
+        recyclerView?.isVisible = !show
+    }
+
 
     fun initRepo() {
-        (applicationContext as App).fillRepoCrazzy()
-        (applicationContext as App).fillRepoFant()
+
+            theMovieRepo.getReposForUserAsync {
+                it.forEach {
+                    (applicationContext as App).moviesRepo.createMovie(it)
+                }
+                runOnUiThread {
+                    initRecyclerView()
+                    Thread.sleep(3000)
+                    showProgress(false)
+                }
+            }
+
+      //  (applicationContext as App).fillRepoCrazzy()
+      //  (applicationContext as App).fillRepoFant()
     }
 
     fun initRecyclerView() {

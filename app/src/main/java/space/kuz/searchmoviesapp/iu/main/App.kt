@@ -1,12 +1,19 @@
 package space.kuz.searchmoviesapp.iu.main
 
 import android.app.Application
+import android.content.Context
+import android.widget.Toast
 import space.kuz.searchmoviesapp.R
+import space.kuz.searchmoviesapp.data.WebTheMovieRepoImpl
 import space.kuz.searchmoviesapp.domain.entity.MovieClass
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
+import space.kuz.searchmoviesapp.domain.repo.TheMovieRepo
 import space.kuz.searchmoviesapp.implimentation.MovieRepositoryImplementation
 
 class App: Application() {
+
+
+    val theMovieRepo: TheMovieRepo by lazy { WebTheMovieRepoImpl() }
     var moviesRepo: MovieRepository = MovieRepositoryImplementation()
     var moviesRepoTwo: MovieRepository = MovieRepositoryImplementation()
 
@@ -56,3 +63,6 @@ class App: Application() {
             "Я Фильм про5","Rasomaxa", "2010",  6.4))
     }
 }
+
+ val Context.app
+get() = applicationContext as App
