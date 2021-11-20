@@ -4,18 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import space.kuz.searchmoviesapp.R
-import space.kuz.searchmoviesapp.domain.entity.Movie
+import space.kuz.searchmoviesapp.domain.entity.MovieClass
 
 class MoviesAdapter : RecyclerView.Adapter<MoviesViewHolder>() {
 
     interface onItemClickListener {
-        fun onItemClick(item: Movie);
+        fun onItemClick(item: MovieClass);
     }
 
-    var data: List<Movie> = ArrayList()
+    var data: List<MovieClass> = ArrayList()
     var listener: onItemClickListener? = null;
 
-    fun setDataBase(data: List<Movie>) {
+    fun setDataBase(data: List<MovieClass>) {
         this.data = data
         notifyDataSetChanged()
     }
@@ -32,7 +32,7 @@ class MoviesAdapter : RecyclerView.Adapter<MoviesViewHolder>() {
     }
 
 
-    fun getItem(position: Int): Movie {
+    fun getItem(position: Int): MovieClass {
         return data.get(position)
     }
 

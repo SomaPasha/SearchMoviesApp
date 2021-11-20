@@ -1,30 +1,22 @@
 package space.kuz.searchmoviesapp.implimentation
 
-import android.app.Activity
-import android.content.Context
-import com.google.android.material.internal.ContextUtils
-import com.mifmif.common.regex.Main
-import kotlinx.coroutines.withContext
-import space.kuz.searchmoviesapp.domain.entity.Movie
+import space.kuz.searchmoviesapp.domain.entity.MovieClass
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
-import space.kuz.searchmoviesapp.iu.main.App
-import space.kuz.searchmoviesapp.iu.main.MainActivity
-import kotlin.contracts.contract
 
 class MovieRepositoryImplementation() : MovieRepository {
-     private var  moviesArr:ArrayList<Movie> = ArrayList()
+     private var  moviesArr:ArrayList<MovieClass> = ArrayList()
      private  var counter:Long=0
-    override fun getMovie(): List<Movie> {
-        return ArrayList<Movie>(moviesArr)
+    override fun getMovie(): List<MovieClass> {
+        return ArrayList<MovieClass>(moviesArr)
     }
 
-    override fun createMovie(movie: Movie): Long {
+    override fun createMovie(movie: MovieClass): Long {
         movie.id=++counter
         moviesArr.add(movie)
         return counter
     }
 
-    override fun updateMovie(id: Long, movie: Movie): Boolean {
+    override fun updateMovie(id: Long, movie: MovieClass): Boolean {
         deleteMovie(id)
         movie.id=id
         moviesArr.add(id.toInt()-1,movie)
