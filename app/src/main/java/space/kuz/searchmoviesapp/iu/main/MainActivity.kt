@@ -1,5 +1,7 @@
 package space.kuz.searchmoviesapp.iu.main
 
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -22,6 +24,7 @@ import space.kuz.searchmoviesapp.domain.repo.TheMovieRepo
 import space.kuz.searchmoviesapp.iu.MoviesAdapter
 import space.kuz.searchmoviesapp.iu.fragment.ListMovieFragment
 import space.kuz.searchmoviesapp.iu.fragment.OneMovieFragment
+import space.kuz.searchmoviesapp.util.mvp.ExampleBroadcastReceiver
 import java.io.IOException
 import java.lang.Exception
 import java.util.*
@@ -34,13 +37,12 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
     var recyclerViewTwo: RecyclerView? = null
     var adapter: MoviesAdapter = MoviesAdapter()
     var adapterTwo: MoviesAdapter = MoviesAdapter()
+    val exampleBroadcastReceiver: ExampleBroadcastReceiver = ExampleBroadcastReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
         showProgress(true)
 
         val navController = findNavController(R.id.nav_host_fragment)
@@ -62,6 +64,17 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
             true
         })
         initRecyclerView()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val filter: IntentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(exampleBroadcastReceiver, filter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(exampleBroadcastReceiver)
     }
     private  fun showProgress(show:Boolean) {
         binding.progressBar?.isVisible = show
