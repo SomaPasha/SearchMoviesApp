@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import space.kuz.searchmoviesapp.R
+import space.kuz.searchmoviesapp.data.RetrofitTheMovieRepoImpl
 import space.kuz.searchmoviesapp.data.WebTheMovieRepoImpl
 import space.kuz.searchmoviesapp.domain.entity.MovieClass
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
@@ -13,7 +14,7 @@ import space.kuz.searchmoviesapp.implimentation.MovieRepositoryImplementation
 class App: Application() {
 
 
-    val theMovieRepo: TheMovieRepo by lazy { WebTheMovieRepoImpl() }
+    val theMovieRepo: TheMovieRepo by lazy { RetrofitTheMovieRepoImpl() }
     var moviesRepo: MovieRepository = MovieRepositoryImplementation()
     var moviesRepoTwo: MovieRepository = MovieRepositoryImplementation()
 
