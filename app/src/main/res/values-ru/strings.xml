@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Фильмы</string>
+    <string name="list_movie">Список фильмов</string>
+    <string name="favorite_movie">Выбранный фильм</string>
+    <string name="ratings_movie">Рейтинг фильмов</string>
+    <string name="seach">Поиск</string>
+    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
+    <string name="fantazy">Фантастика</string>
+    <string name="crazy">Сумашедшие</string>
+</resources>
