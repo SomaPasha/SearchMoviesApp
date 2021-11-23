@@ -3,10 +3,12 @@ package space.kuz.searchmoviesapp.iu.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.MaterialToolbar
 import space.kuz.searchmoviesapp.R
 import space.kuz.searchmoviesapp.iu.main.MainActivity
+import space.kuz.searchmoviesapp.iu.main.MyAnalytics
 
 class ListMovieFragment : Fragment() {
     private lateinit var toolbar: MaterialToolbar
@@ -18,7 +20,6 @@ class ListMovieFragment : Fragment() {
     ): View? {
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_list_movie, container,false)
-
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)

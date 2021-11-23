@@ -10,6 +10,7 @@ import space.kuz.searchmoviesapp.R
 import space.kuz.searchmoviesapp.databinding.FragmentOneMovieBinding
 import space.kuz.searchmoviesapp.domain.entity.MovieClass
 import space.kuz.searchmoviesapp.iu.main.MainActivity
+import space.kuz.searchmoviesapp.iu.main.MyAnalytics
 
 class OneMovieFragment:Fragment() {
     private lateinit var toolbar: MaterialToolbar
@@ -42,6 +43,7 @@ class OneMovieFragment:Fragment() {
         val bundle = arguments
         bundle?.let { putAndSetView(it) }
         controller!!.openOneMovie()
+      //  MyAnalytics.logEvent(view.context, " onViewCreatedOne ")
     }
 
     private fun putAndSetView(bundle: Bundle) {
@@ -78,6 +80,7 @@ class OneMovieFragment:Fragment() {
     }
 
     override fun onDestroy() {
+        context?.let { MyAnalytics.logEvent(it, "Close ${movie.name}") }
         controller = null
         super.onDestroy()
     }

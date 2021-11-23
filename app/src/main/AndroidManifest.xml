@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SearchMoviesApp"
         android:name=".iu.main.App">
+        <service android:name=".util.mvp.MyService"
+            android:enabled="true"
+            android:exported="true"
+            ></service>
         <activity
             android:name=".iu.main.MainActivity"
             android:exported="true">
