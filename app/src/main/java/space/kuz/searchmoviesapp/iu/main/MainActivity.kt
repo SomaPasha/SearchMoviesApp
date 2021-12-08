@@ -17,11 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
+import retrofit2.Call
 import space.kuz.searchmoviesapp.R
 import space.kuz.searchmoviesapp.databinding.ActivityMainBinding
 import space.kuz.searchmoviesapp.domain.entity.MovieClass
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
 import space.kuz.searchmoviesapp.domain.repo.TheMovieRepo
+import space.kuz.searchmoviesapp.domain.repo.TheMovieRepoRoom
 import space.kuz.searchmoviesapp.iu.MoviesAdapter
 import space.kuz.searchmoviesapp.iu.fragment.ListMovieFragment
 import space.kuz.searchmoviesapp.iu.fragment.OneMovieFragment
@@ -38,6 +40,9 @@ object MyAnalytics{
 }
 class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
     OneMovieFragment.Controller  {
+   // private  val movieRepoRoom : TheMovieRepoRoom by lazy { app.movieRepoRoom }
+
+
     private  val  theMovieRepo: TheMovieRepo  by lazy { app.theMovieRepo }
     lateinit var  binding: ActivityMainBinding
     var recyclerView: RecyclerView? = null
@@ -110,12 +115,13 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
     fun initRepo() {
 
             theMovieRepo.getReposForUserAsync {
+             //   val repos: Call<List<MovieClass>> = theMovieRepo. .api.listRepos("octocat")
                 it.forEach {
                     (applicationContext as App).moviesRepo.createMovie(
                         MovieClass(
                             "https://www.themoviedb.org/t/p/w1000_and_h450_multi_faces" +
                             it.image,
-                            it.name, it.description, it.year.substring(0, 4), it.rating
+                            it.name, it.description, it.year.substring(0, 4), it.rating, 40.0  ,40.0
                         )
                         )
                 }

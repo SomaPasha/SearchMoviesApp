@@ -22,8 +22,9 @@ data class MovieClass (
  @SerializedName("release_date")
  val  year:String, // дата
  @SerializedName("vote_average")
- val  rating:Double
-
+ val  rating:Double,
+ val geoLocX:Double,
+ val geoLocY:Double
 ) : Parcelable {
  var id : Long? = null
 }
