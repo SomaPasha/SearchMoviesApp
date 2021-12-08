@@ -22,6 +22,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
@@ -63,6 +69,8 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
 
     private  val  theMovieRepo: TheMovieRepo  by lazy { app.theMovieRepo }
     lateinit var  binding: ActivityMainBinding
+
+    private  var mapView:GoogleMap?= null
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
         isGranted ->
         binding.requestPermissionTextView?.text = if (isGranted) "+" else "-"
@@ -73,6 +81,11 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
             field = value
             binding.addressTextView!!.isVisible = value != null
             binding.addressButton!!.isVisible = value != null
+        val market =    value?.let {
+            mapView?.addMarker(MarkerOptions().position(LatLng(it.latitude,it.longitude)))
+            mapView?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude,it.longitude)))
+          }
+
         }
 
     private val  locationManager by lazy {  getSystemService(LOCATION_SERVICE) as LocationManager }
@@ -120,6 +133,13 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         val navController = findNavController(R.id.nav_host_fragment)
         binding.navView.setupWithNavController(navController)
         initRepo()
+        registerMapCallBack{
+            mapView = it
+            Toast.makeText(this@MainActivity, "Map Ready", Toast.LENGTH_LONG).show()
+            val sydney = LatLng(-34.0, 151.0)
+            it.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+            it.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        }
         geo()
         binding.navView.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
@@ -329,6 +349,11 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
 
     override fun openOneMovie() {
 
+    }
+
+    private  fun registerMapCallBack(callback:OnMapReadyCallback){
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        mapFragment?.getMapAsync(callback)
     }
 
 }

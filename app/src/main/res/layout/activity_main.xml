@@ -43,13 +43,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="Permission"
-    android:layout_marginTop="300dp"></Button>
+    android:layout_marginTop="0dp"></Button>
     <TextView
         android:id="@+id/request_permission_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Permission"
-        android:layout_marginTop="350dp">
+        android:layout_marginTop="50dp">
     </TextView>
 
     <LinearLayout
@@ -57,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="390dp">
+        android:layout_marginTop="100dp">
         <Button
             android:id="@+id/last_know_location_button"
             android:layout_width="match_parent"
@@ -103,8 +103,15 @@
             android:layout_height="wrap_content"
             android:text="Stop"
             ></Button>
-    </LinearLayout>
 
+    </LinearLayout>
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="350dp"
+        />
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
