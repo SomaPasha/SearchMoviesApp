@@ -1,6 +1,11 @@
 package space.kuz.searchmoviesapp.iu.main
 
 import android.content.*
+import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +13,9 @@ import android.os.IBinder
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.PermissionChecker
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -17,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
+import org.apache.commons.lang3.ObjectUtils
 import retrofit2.Call
 import space.kuz.searchmoviesapp.R
 import space.kuz.searchmoviesapp.databinding.ActivityMainBinding
@@ -30,7 +39,9 @@ import space.kuz.searchmoviesapp.iu.fragment.OneMovieFragment
 import space.kuz.searchmoviesapp.util.mvp.ExampleBroadcastReceiver
 import space.kuz.searchmoviesapp.util.mvp.MyService
 import java.util.*
-    public val  EVENT ="Event"
+import java.util.jar.Manifest
+
+public val  EVENT ="Event"
 object MyAnalytics{
     fun logEvent(context: Context,event:String){
         val intent =  Intent(context, MyService::class.java)
@@ -45,6 +56,20 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
 
     private  val  theMovieRepo: TheMovieRepo  by lazy { app.theMovieRepo }
     lateinit var  binding: ActivityMainBinding
+    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
+        isGranted ->
+        binding.requestPermissionTextView?.text = if (isGranted) "+" else "-"
+        binding.locationContainer?.isVisible = isGranted
+    }
+    private var location: Location? = null
+      set(value) {
+            field = value
+            binding.addressTextView!!.isVisible = value != null
+            binding.addressButton!!.isVisible = value != null
+        }
+
+    private val  locationManager by lazy {  getSystemService(LOCATION_SERVICE) as LocationManager }
+
     var recyclerView: RecyclerView? = null
     var recyclerViewTwo: RecyclerView? = null
     var adapter: MoviesAdapter = MoviesAdapter()
@@ -66,10 +91,13 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         showProgress(true)
+        binding.locationContainer?.isVisible = false
+       binding.addressTextView?.isVisible = false
+        binding.addressButton?.isVisible = false
         val navController = findNavController(R.id.nav_host_fragment)
         binding.navView.setupWithNavController(navController)
         initRepo()
-
+        geo()
         binding.navView.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
                 //   R.id.navigation_list_movie-> supportFragmentManager.popBackStack()
@@ -110,8 +138,68 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         binding.progressBar?.isVisible = show
         recyclerView?.isVisible = !show
     }
+    fun geo() {
+        binding.requestPermissionButton!!.setOnClickListener{
+            permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        binding.lastKnowLocationButton!!.setOnClickListener {
+           if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)!= PERMISSION_GRANTED) return@setOnClickListener
+
+           // val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+             location =  locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+          //  Thread{
+           //     locationMain?.set(location)
+          //  }.start()
 
 
+            val locationString = location?.let {
+                "[ ${it.latitude} , ${it.longitude} ]"
+            } ?: "NULL"
+            binding.lastKnowLocationTextView?.text = locationString
+        }
+
+        binding.addressButton?.setOnClickListener {
+               location?.run {
+                Thread{
+              val addres =  Geocoder(this@MainActivity).getFromLocation(latitude,longitude, 1).firstOrNull()
+
+                    runOnUiThread{
+                        binding.addressTextView?.text = addres.toString()
+                    }
+
+                }.start()
+            }
+        }
+
+        binding.realtimeLocationButton?.setOnClickListener {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1_000L, 10f, locationListener)
+          //      locationManager.
+
+
+        }
+        binding.stopButton?.setOnClickListener {
+            locationManager.removeUpdates(locationListener)
+        }
+
+    }
+    val locationListener = object :LocationListener{
+        override fun onLocationChanged(location: Location) {
+            this@MainActivity.location = location
+            binding.realtimeLocationTextView?.text  = location?.let {
+                "[ ${it.latitude} , ${it.longitude} ]"
+            } ?: "NULL"
+        }
+
+        override fun onProviderDisabled(provider: String) {
+           Toast.makeText(this@MainActivity,"Disabled", Toast.LENGTH_LONG ).show()
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            Toast.makeText(this@MainActivity,"Enabled", Toast.LENGTH_LONG ).show()
+        }
+
+    }
     fun initRepo() {
 
             theMovieRepo.getReposForUserAsync {

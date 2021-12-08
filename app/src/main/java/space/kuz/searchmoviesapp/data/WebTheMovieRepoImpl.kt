@@ -35,7 +35,7 @@ class WebTheMovieRepoImpl:TheMovieRepo {
                     it.results.forEach {
                         result.add(MovieClass(
                                     it.image,
-                            it.name, it.description, it.year, it.rating
+                            it.name, it.description, it.year, it.rating, 40.0,40.0
                         ))
 
                     }
