@@ -38,6 +38,7 @@ import space.kuz.searchmoviesapp.iu.fragment.ListMovieFragment
 import space.kuz.searchmoviesapp.iu.fragment.OneMovieFragment
 import space.kuz.searchmoviesapp.util.mvp.ExampleBroadcastReceiver
 import space.kuz.searchmoviesapp.util.mvp.MyService
+import space.kuz.searchmoviesapp.util.mvp.toPrintString
 import java.util.*
 import java.util.jar.Manifest
 
@@ -49,6 +50,12 @@ object MyAnalytics{
         context.startService(intent)
     }
 }
+
+private  const val GPS_UPDATE_DURATION = 1000L
+private const val  GPS_UPDATE_DISTANCE_M = 10f
+
+private  const val  GPS_PERMISSION = android.Manifest.permission.ACCESS_FINE_LOCATION
+
 class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
     OneMovieFragment.Controller  {
    // private  val movieRepoRoom : TheMovieRepoRoom by lazy { app.movieRepoRoom }
@@ -82,6 +89,22 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
 
         override fun onServiceDisconnected(name: ComponentName?) {
             Log.d("@@@", "onServiceDisconnected")
+        }
+
+    }
+
+    val locationListener = object :LocationListener{
+        override fun onLocationChanged(location: Location) {
+            this@MainActivity.location = location
+            binding.realtimeLocationTextView?.text  = location.toPrintString()
+        }
+
+        override fun onProviderDisabled(provider: String) {
+            Toast.makeText(this@MainActivity,"Disabled", Toast.LENGTH_LONG ).show()
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            Toast.makeText(this@MainActivity,"Enabled", Toast.LENGTH_LONG ).show()
         }
 
     }
@@ -139,12 +162,15 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         recyclerView?.isVisible = !show
     }
     fun geo() {
+
+
+
         binding.requestPermissionButton!!.setOnClickListener{
-            permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            permissionLauncher.launch(GPS_PERMISSION)
         }
 
         binding.lastKnowLocationButton!!.setOnClickListener {
-           if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)!= PERMISSION_GRANTED) return@setOnClickListener
+           if (checkSelfPermission(GPS_PERMISSION)!= PERMISSION_GRANTED) return@setOnClickListener
 
            // val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
              location =  locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
@@ -153,9 +179,7 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
           //  }.start()
 
 
-            val locationString = location?.let {
-                "[ ${it.latitude} , ${it.longitude} ]"
-            } ?: "NULL"
+            val locationString = location?.toPrintString() ?: ""
             binding.lastKnowLocationTextView?.text = locationString
         }
 
@@ -173,8 +197,9 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         }
 
         binding.realtimeLocationButton?.setOnClickListener {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1_000L, 10f, locationListener)
-          //      locationManager.
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                GPS_UPDATE_DURATION, GPS_UPDATE_DISTANCE_M, locationListener)
+
 
 
         }
@@ -183,23 +208,7 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         }
 
     }
-    val locationListener = object :LocationListener{
-        override fun onLocationChanged(location: Location) {
-            this@MainActivity.location = location
-            binding.realtimeLocationTextView?.text  = location?.let {
-                "[ ${it.latitude} , ${it.longitude} ]"
-            } ?: "NULL"
-        }
 
-        override fun onProviderDisabled(provider: String) {
-           Toast.makeText(this@MainActivity,"Disabled", Toast.LENGTH_LONG ).show()
-        }
-
-        override fun onProviderEnabled(provider: String) {
-            Toast.makeText(this@MainActivity,"Enabled", Toast.LENGTH_LONG ).show()
-        }
-
-    }
     fun initRepo() {
 
             theMovieRepo.getReposForUserAsync {
