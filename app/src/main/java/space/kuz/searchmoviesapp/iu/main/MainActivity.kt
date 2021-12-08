@@ -73,15 +73,12 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
     private  var mapView:GoogleMap?= null
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
         isGranted ->
-        binding.requestPermissionTextView?.text = if (isGranted) "+" else "-"
-        binding.locationContainer?.isVisible = isGranted
     }
     private var location: Location? = null
       set(value) {
             field = value
-            binding.addressTextView!!.isVisible = value != null
-            binding.addressButton!!.isVisible = value != null
         val market =    value?.let {
+
             mapView?.addMarker(MarkerOptions().position(LatLng(it.latitude,it.longitude)))
             mapView?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude,it.longitude)))
           }
@@ -109,7 +106,6 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
     val locationListener = object :LocationListener{
         override fun onLocationChanged(location: Location) {
             this@MainActivity.location = location
-            binding.realtimeLocationTextView?.text  = location.toPrintString()
         }
 
         override fun onProviderDisabled(provider: String) {
@@ -127,16 +123,13 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         showProgress(true)
-        binding.locationContainer?.isVisible = false
-       binding.addressTextView?.isVisible = false
-        binding.addressButton?.isVisible = false
         val navController = findNavController(R.id.nav_host_fragment)
         binding.navView.setupWithNavController(navController)
         initRepo()
         registerMapCallBack{
             mapView = it
             Toast.makeText(this@MainActivity, "Map Ready", Toast.LENGTH_LONG).show()
-            val sydney = LatLng(-34.0, 151.0)
+            val sydney = LatLng(-80.0, 180.0)
             it.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
             it.moveCamera(CameraUpdateFactory.newLatLng(sydney))
         }
@@ -182,63 +175,23 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         recyclerView?.isVisible = !show
     }
     fun geo() {
-
-
-
-        binding.requestPermissionButton!!.setOnClickListener{
-            permissionLauncher.launch(GPS_PERMISSION)
-        }
-
-        binding.lastKnowLocationButton!!.setOnClickListener {
-           if (checkSelfPermission(GPS_PERMISSION)!= PERMISSION_GRANTED) return@setOnClickListener
-
-           // val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-             location =  locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-          //  Thread{
-           //     locationMain?.set(location)
-          //  }.start()
-
-
-            val locationString = location?.toPrintString() ?: ""
-            binding.lastKnowLocationTextView?.text = locationString
-        }
-
-        binding.addressButton?.setOnClickListener {
-               location?.run {
-                Thread{
-              val addres =  Geocoder(this@MainActivity).getFromLocation(latitude,longitude, 1).firstOrNull()
-
-                    runOnUiThread{
-                        binding.addressTextView?.text = addres.toString()
-                    }
-
-                }.start()
-            }
-        }
-
-        binding.realtimeLocationButton?.setOnClickListener {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                GPS_UPDATE_DURATION, GPS_UPDATE_DISTANCE_M, locationListener)
-
-
-
-        }
-        binding.stopButton?.setOnClickListener {
-            locationManager.removeUpdates(locationListener)
-        }
-
+        permissionLauncher.launch(GPS_PERMISSION)
     }
 
     fun initRepo() {
-
+        val random = Random()
             theMovieRepo.getReposForUserAsync {
              //   val repos: Call<List<MovieClass>> = theMovieRepo. .api.listRepos("octocat")
                 it.forEach {
+                    var x = -90+ random.nextDouble()*90
+                    var y = -180 +  random.nextDouble()*180
                     (applicationContext as App).moviesRepo.createMovie(
+
+
                         MovieClass(
                             "https://www.themoviedb.org/t/p/w1000_and_h450_multi_faces" +
                             it.image,
-                            it.name, it.description, it.year.substring(0, 4), it.rating, 40.0  ,40.0
+                            it.name, it.description, it.year.substring(0, 4), it.rating, x  ,y
                         )
                         )
                 }
@@ -285,6 +238,8 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
             override fun onItemClick(item: MovieClass) {
                 openMovieScreen(item)
                 Toast.makeText(this@MainActivity, item.id.toString(), Toast.LENGTH_SHORT).show();
+                mapView?.addMarker(MarkerOptions().position(LatLng(item.geoLocX,item.geoLocY)))
+                mapView?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(item.geoLocX,item.geoLocY)))
             }
         })
     }
@@ -344,7 +299,8 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
 
     override fun openListMovie() {
         initRecyclerView()
-        //  Toast.makeText(this,"Н++",Toast.LENGTH_LONG).show()
+
+       //  Toast.makeText(this,"Н++",Toast.LENGTH_LONG).show()
     }
 
     override fun openOneMovie() {

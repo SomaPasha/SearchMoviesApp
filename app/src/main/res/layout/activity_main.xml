@@ -38,73 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></View>
 
-<Button
-    android:id="@+id/request_permission_button"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Permission"
-    android:layout_marginTop="0dp"></Button>
-    <TextView
-        android:id="@+id/request_permission_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Permission"
-        android:layout_marginTop="50dp">
-    </TextView>
 
-    <LinearLayout
-        android:id="@+id/location_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="100dp">
-        <Button
-            android:id="@+id/last_know_location_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Last Know Location"
-           ></Button>
-        <TextView
-            android:id="@+id/last_know_location_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Permission"
-            >
-        </TextView>
-        <Button
-            android:id="@+id/address_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Address"
-            ></Button>
-        <TextView
-            android:id="@+id/address_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Permission"
-            >
-        </TextView>
-        <Button
-            android:id="@+id/realtime_location_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Realtime"
-            ></Button>
-        <TextView
-            android:id="@+id/realtime_location_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Permission"
-            >
-        </TextView>
-        <Button
-            android:id="@+id/stop_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Stop"
-            ></Button>
-
-    </LinearLayout>
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
