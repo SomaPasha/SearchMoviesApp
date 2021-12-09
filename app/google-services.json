@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1039774988141",
+    "project_id": "searchmoviesapp",
+    "storage_bucket": "searchmoviesapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1039774988141:android:f76641dd87a8b4ac464c64",
+        "android_client_info": {
+          "package_name": "space.kuz.searchmoviesapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1039774988141-hk4f2eglm973qrlomp34dn1pu20g05d8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmpaVhMbhvH4CsFMekZP8KG3clm76FLzA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1039774988141-hk4f2eglm973qrlomp34dn1pu20g05d8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
