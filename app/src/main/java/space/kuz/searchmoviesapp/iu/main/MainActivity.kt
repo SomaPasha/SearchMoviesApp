@@ -1,5 +1,8 @@
 package space.kuz.searchmoviesapp.iu.main
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Geocoder
@@ -7,6 +10,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.ConnectivityManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
@@ -15,7 +19,11 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.PermissionChecker
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -59,7 +67,8 @@ object MyAnalytics{
 
 private  const val GPS_UPDATE_DURATION = 1000L
 private const val  GPS_UPDATE_DISTANCE_M = 10f
-
+private const val  NOTIFICATION_ID  =123
+private const val  CHANNEL_ID  ="channel id"
 private  const val  GPS_PERMISSION = android.Manifest.permission.ACCESS_FINE_LOCATION
 
 class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
@@ -69,7 +78,7 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
 
     private  val  theMovieRepo: TheMovieRepo  by lazy { app.theMovieRepo }
     lateinit var  binding: ActivityMainBinding
-
+    private lateinit var notificationManager: NotificationManager
     private  var mapView:GoogleMap?= null
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
         isGranted ->
@@ -126,6 +135,8 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         val navController = findNavController(R.id.nav_host_fragment)
         binding.navView.setupWithNavController(navController)
         initRepo()
+        notificationManager =  getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         registerMapCallBack{
             mapView = it
             Toast.makeText(this@MainActivity, "Map Ready", Toast.LENGTH_LONG).show()
@@ -255,8 +266,16 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         var  snack : Snackbar = Snackbar.make(binding.snackbarView!!,"",LENGTH_SHORT)
         when (item.itemId) {
-            R.id.setting -> Snackbar.make(binding.snackbarView!!,snack.setTextString(R.string.settings),LENGTH_SHORT).show()
-
+            R.id.setting -> {
+                Snackbar.make(
+                    binding.snackbarView!!,
+                    snack.setTextString(R.string.settings),
+                    LENGTH_SHORT
+                ).show()
+                NotificationManagerCompat.from(this)
+                createChannelsOnStart(notificationManager)
+                notificationManager.notify(NOTIFICATION_ID, createNotification(this))
+            }
                 //Toast.makeText(this, "Настройки", Toast.LENGTH_LONG).show()
             R.id.exit -> {
             //    val intent = Intent(this, MyService::class.java)
@@ -312,4 +331,25 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         mapFragment?.getMapAsync(callback)
     }
 
+    private  fun createChannelsOnStart(notificationManager: NotificationManager){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel:NotificationChannel = NotificationChannel(CHANNEL_ID,
+                "Канал №1",
+                NotificationManager.IMPORTANCE_HIGH)
+            channel.description = "Канал для напоминания"
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private  fun createNotification(context: Context):Notification{
+        val icon = AppCompatResources.getDrawable(context, R.drawable.notification_image_large)
+     val bitmap =    icon?.toBitmap(200,200)
+        val notification:Notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setContentTitle("БУдильник")
+            .setContentText("Напоминаю, что пора взяться за работу")
+            .setSmallIcon(R.drawable.notification_image)
+            .setLargeIcon(bitmap)
+            .build()
+        return  notification
+    }
 }
