@@ -1,30 +1,22 @@
 package space.kuz.searchmoviesapp.iu.main
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.*
-import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.ConnectivityManager
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.PermissionChecker
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -41,22 +33,21 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
-import org.apache.commons.lang3.ObjectUtils
-import retrofit2.Call
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
+import space.kuz.searchmoviesapp.AlarmActivity2
 import space.kuz.searchmoviesapp.R
 import space.kuz.searchmoviesapp.databinding.ActivityMainBinding
 import space.kuz.searchmoviesapp.domain.entity.MovieClass
 import space.kuz.searchmoviesapp.domain.repo.MovieRepository
 import space.kuz.searchmoviesapp.domain.repo.TheMovieRepo
-import space.kuz.searchmoviesapp.domain.repo.TheMovieRepoRoom
 import space.kuz.searchmoviesapp.iu.MoviesAdapter
 import space.kuz.searchmoviesapp.iu.fragment.ListMovieFragment
 import space.kuz.searchmoviesapp.iu.fragment.OneMovieFragment
 import space.kuz.searchmoviesapp.util.mvp.ExampleBroadcastReceiver
 import space.kuz.searchmoviesapp.util.mvp.MyService
-import space.kuz.searchmoviesapp.util.mvp.toPrintString
+import java.text.SimpleDateFormat
 import java.util.*
-import java.util.jar.Manifest
 
 public val  EVENT ="Event"
 object MyAnalytics{
@@ -82,6 +73,8 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
     lateinit var  binding: ActivityMainBinding
     private lateinit var notificationManager: NotificationManagerCompat
     private  var mapView:GoogleMap?= null
+
+    var date = SimpleDateFormat("HH:mm", Locale.getDefault())
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
         isGranted ->
     }
@@ -138,6 +131,12 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         binding.navView.setupWithNavController(navController)
         initRepo()
        // notificationManager =  getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+
+
+
+
+
 
         registerMapCallBack{
             mapView = it
@@ -274,11 +273,36 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
                     snack.setTextString(R.string.settings),
                     LENGTH_SHORT
                 ).show()
-                notificationManager =  NotificationManagerCompat.from(this)
 
+                var materialTimePicker = MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setHour(12)
+                    .setMinute(0)
+                    .setTitleText("Выберите время будильника")
+                    .build()
+                var stringTime =""
+                materialTimePicker.addOnPositiveButtonClickListener{
+                   var calendar = Calendar.getInstance()
+                    calendar.set(Calendar.MILLISECOND, 0)
+                    calendar.set(Calendar.SECOND, 0)
+                    calendar.set(Calendar.MINUTE, materialTimePicker.minute)
+                    calendar.set(Calendar.HOUR, materialTimePicker.hour)
+
+                    var alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+                   var alarmClockInfo =    AlarmManager.AlarmClockInfo(calendar.timeInMillis,getAlarmInfoPendingIntent())
+
+                    alarmManager.setAlarmClock(alarmClockInfo, getAlarmActionPendingIntent())
+                    stringTime = "Будильник установлен${date.format(calendar.time)}"
+                        //      Toast.makeText(this,  "Будильник установлен на ${date.format(calendar.time)}",Toast.LENGTH_LONG ).show()
+                }
+                materialTimePicker.show(supportFragmentManager,"tagg")
+
+                notificationManager =  NotificationManagerCompat.from(this)
                 NotificationManagerCompat.from(this)
                 createChannelsOnStart(notificationManager)
                 notificationManager.notify(NOTIFICATION_ID, createNotification(this))
+
             }
                 //Toast.makeText(this, "Настройки", Toast.LENGTH_LONG).show()
             R.id.exit -> {
@@ -356,11 +380,26 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
 
         val notification:Notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle("БУдильник")
-            .setContentText("Напоминаю, что пора взяться за работу")
+            .setContentText("Установите Будильник")
             .setSmallIcon(R.drawable.notification_image)
             .setLargeIcon(bitmap)
             .setContentIntent(pendingIntent)
             .build()
         return  notification
     }
+
+    fun getAlarmInfoPendingIntent() : PendingIntent{
+        var alarmInfoIntent = Intent(this, MainActivity::class.java)
+        alarmInfoIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK )
+        return  PendingIntent.getActivity(
+            this, 0 , alarmInfoIntent ,
+            PendingIntent.FLAG_CANCEL_CURRENT)
+    }
+    fun getAlarmActionPendingIntent(): PendingIntent {
+         var intent = Intent(this,AlarmActivity2::class.java )
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            return PendingIntent.getActivity(this,1,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+
 }
