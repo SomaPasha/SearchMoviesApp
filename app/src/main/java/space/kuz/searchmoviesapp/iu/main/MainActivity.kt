@@ -3,6 +3,7 @@ package space.kuz.searchmoviesapp.iu.main
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.*
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Geocoder
@@ -20,6 +21,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.PermissionChecker
@@ -78,7 +80,7 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
 
     private  val  theMovieRepo: TheMovieRepo  by lazy { app.theMovieRepo }
     lateinit var  binding: ActivityMainBinding
-    private lateinit var notificationManager: NotificationManager
+    private lateinit var notificationManager: NotificationManagerCompat
     private  var mapView:GoogleMap?= null
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
         isGranted ->
@@ -135,7 +137,7 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         val navController = findNavController(R.id.nav_host_fragment)
         binding.navView.setupWithNavController(navController)
         initRepo()
-        notificationManager =  getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+       // notificationManager =  getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         registerMapCallBack{
             mapView = it
@@ -272,6 +274,8 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
                     snack.setTextString(R.string.settings),
                     LENGTH_SHORT
                 ).show()
+                notificationManager =  NotificationManagerCompat.from(this)
+
                 NotificationManagerCompat.from(this)
                 createChannelsOnStart(notificationManager)
                 notificationManager.notify(NOTIFICATION_ID, createNotification(this))
@@ -331,24 +335,31 @@ class MainActivity  :  AppCompatActivity(), ListMovieFragment.Controller,
         mapFragment?.getMapAsync(callback)
     }
 
-    private  fun createChannelsOnStart(notificationManager: NotificationManager){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel:NotificationChannel = NotificationChannel(CHANNEL_ID,
-                "Канал №1",
+    private  fun createChannelsOnStart(notificationManager: NotificationManagerCompat){
+
+            val channel= NotificationChannelCompat.Builder(
+                CHANNEL_ID,
                 NotificationManager.IMPORTANCE_HIGH)
-            channel.description = "Канал для напоминания"
+                .setName("Канал №1")
+                .setDescription("Канал для напоминания")
+                .build()
             notificationManager.createNotificationChannel(channel)
-        }
+
     }
 
     private  fun createNotification(context: Context):Notification{
         val icon = AppCompatResources.getDrawable(context, R.drawable.notification_image_large)
      val bitmap =    icon?.toBitmap(200,200)
+
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent:PendingIntent = PendingIntent.getActivity(context, 0,intent, 0)
+
         val notification:Notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle("БУдильник")
             .setContentText("Напоминаю, что пора взяться за работу")
             .setSmallIcon(R.drawable.notification_image)
             .setLargeIcon(bitmap)
+            .setContentIntent(pendingIntent)
             .build()
         return  notification
     }
