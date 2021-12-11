@@ -20,27 +20,50 @@ android {
     }
 
     buildTypes {
-        debug{
-            applicationIdSuffix ".debug"
-            minifyEnabled false
-        }
+
 
         dev{
+            initWith debug
             applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
             minifyEnabled false
         }
 
         beta{
             applicationIdSuffix ".beta"
+           versionNameSuffix "-beta"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+
+
+    productFlavors{
+        coffeeShop{
+            dimension 'customer'
+        }
+
+        shaurmaLarek{
+            dimension 'customer'
+        }
+
+        coffeePoint{
+            dimension 'customer'
+        }
+        online {
+            dimension 'network'
+
+        }
+        offline {
+            dimension 'network'
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -54,6 +77,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    flavorDimensions 'network', 'customer'
 }
 
 dependencies {
