@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/navigation_list_movie">
+
+    <fragment
+        android:id="@+id/navigation_list_movie"
+        android:name="space.kuz.searchmoviesapp.iu.fragment.ListMovieFragment"
+        android:label="fragment_list_movie"
+        tools:layout="@layout/fragment_list_movie" />
+
+    <fragment
+        android:id="@+id/navigation_favorite_movie"
+        android:name="space.kuz.searchmoviesapp.iu.fragment.FavoriteMovieFragment"
+        android:label="fragment_favorite_movie"
+        tools:layout="@layout/fragment_favorite_movie" />
+
+    <fragment
+        android:id="@+id/navigation_ratings_movie"
+        android:name="space.kuz.searchmoviesapp.iu.fragment.RatingsMovieFragment"
+        android:label="fragment_ratings_movie"
+        tools:layout="@layout/fragment_ratings_movie" />
+</navigation>
