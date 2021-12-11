@@ -41,7 +41,7 @@ android {
         }
     }
 
-
+flavorDimensions 'customer','network'
 
     productFlavors{
         coffeeShop{
